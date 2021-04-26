@@ -1,0 +1,89 @@
+{
+    "talk": {
+        "description": [
+            "ask {{name}} if they think you're cool enough",
+            "ask for {{name}}'s approval",
+            "get {{name}} to like you",
+            "talk to {{name}} for me",
+            "see if {{name}} approves",
+            "tell {{name}} that I sent you",
+            "have {{name}} take a look at you",
+            "does {{name}} know? If not I can't approve"
+        ],
+        "activation": [
+            "{{parent_name}} wants me to approve you? I ain't working for free bud.",
+            "You'll need you to run me some errands before you get my approval.",
+            "{{parent_name}} is like family to me, I can't approve you before you",
+            "Shoosh, don't ask me to approve anything before you",
+            "{{parent_name}} is my master and i'm their slave. Talk to my master to get my approval",
+            "Got 'em some handy-dandy yum yum quests to do before I can give in.",
+            "{{parent_name}} sent you? OK sure but I got a couple of stuff I need first, ",
+            "That bastard {{parent_name}} is annoying me again? Sheesh.... Do this first and then i'll abide...",
+            "You are my type baby. OK i'll approve but I just need these things set and i'll approve.",
+             "{{parent_name}} {{parent_name}}, why do I suffer from random people talking to me... Do this, and then i'll think about it."
+        ],
+        "completion": [
+            "You seem cool enough, tell {{parent_name}} I approve your existance",
+            "Fine, just tell {{parent_name}} we're cool",
+            "Well you're new here, and we're not used to seeing new face around this place, and if {{parent_name}} sent you, you must be cool. Tell them we're cool",
+            "Babyyy you're back my love. Gosh i've missed you so much I thought i'd die without you... Tell {{parent_name}} that they sent a sexy baby this way. I approve.",
+            "Tell {{parent_name}} I approve. But get out of my face as soon as possible",
+            "Go back to {{parent_name}}",
+            "I'm in depression. LEAVE ME ALONE. GO BACK TO {{parent_name}}",
+            "{{parent_name}}. Now.",
+            "Sometimes I wish I was a real cowboy... {{parent_name}} would be proud of me.",
+            "What are you doing here?! I told you to talk to {{parent_name}} now that I approved. Go. You're wasting my time.",
+            "{{parent_name}} wants to hear from you now that we're done.",
+            "Why is this spaceship so crowded... There's got to be the virus here somewhere. I heard {{parent_name}} has been coughing lately",
+            "SIR YES SIR! {{parent_name}} SUMMONS YOU TO THEIR QUARTERS SIR YES SIR!",
+            "How far are we from earth? Years? LIGHT YEARS? Gosh. I haven't seen my children in years. Will I even see them again? Maybe I won't... I'll die old, without anyone... Sorry that i'm spacing out but tell {{parent_name}} I approve",
+            "Have you seen the new episode of Dora the Explora? That person {{parent_name}} spoiled it for me."
+        ]
+    }, 
+    "deliver": {
+        "description": [
+            "bring this {{item}} to the notorious {{name}}",
+            "get my man {{name}} this special {{item}}",
+            "deliver this super important {{item}} to {{name}}",
+            "make this {{item}} and {{name}} meet",
+            "have {{name}} get this {{item}}",
+            "give my affair lover {{name}} the {{item}}",
+            "deliver my master {{name}} my {{item}}",
+            "pass the {{item}} to {{name}} somewhere around here",
+            "give {{item}} to {{name}} at once",
+            "take this {{item}} and make sure {{name}} gets it unharmed otherwise i'll cry",
+            "crawl your way to {{name}} and give them this {{item}}",
+            "take your big butt to {{name}} nearby and make sure the package with the secret {{item}} is safely in their hands",
+            "give this secret gift to {{name}} to show my affection and love (psssttt it's a {{item}})"
+        ],
+        "activation": [""],
+        "completion": [
+            "{{item}}? For me? I'm gonna have fun with this tonight.",
+            "Oh yeah! I was waiting for this {{item}}. Tell {{parent_name}} I said thanks (oWo)",
+            "Oh it's a {{item}} from {{parent_name}}?! Just what I needed. Thanks baby boy *smooch*",
+            "What?! {{parent_name}} borrowed that {{item}} ages ago and I was sure it's lost forever.",
+            "A {{item}} was all I needed in life. I can't believe it. I was looking this for ages and I can finally die peacefully. PEACEFULLY. {{parent_name}} will get my wet lips.",
+            "I was expecting something else but a {{item}} will do too. If you see {{parent_name}}, tell 'em thanks.",
+            "The {{item}}'s condition is horrible. You did a horrible job and you should be ashamed. Tell {{parent_name}} to make sure it gets less damaged next time.",
+            "Why is the {{item}} used? It was mine. I'm not going to even tip you."
+        ]
+    }, 
+    "pickup": {
+        "description": [
+            "pick up my special {{item}}",
+            "find my lost {{item}}",
+            "get me my morning {{item}}",
+            "look for my {{item}}",
+            "get me a nice piece of {{item}} for my daily zen",
+            "retrieve the {{item}}",
+            "check where the stolen {{item}} is",
+            "find where I dropped my {{item}}",
+            "help me find the missing {{item}}",
+            "locate the {{item}} here somewhere",
+            "search the whereabouts of the sacred {{item}}",
+            "patrol until you find the {{item}} I was looking for"
+        ],
+        "activation": [""],
+        "completion": [""]
+    }
+}

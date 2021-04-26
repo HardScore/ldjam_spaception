@@ -1,0 +1,27 @@
+{
+    "dialog": [{
+        "name":"Captain",
+        "graphic": "CAPTAIN",
+        "event" : null,
+        "lines": ["Good job! You saved the ship and everyone on board.", "Knowing the people on this ship, I'm sure it wasn't easy."]
+    }, 
+    {"name":"Player",
+        "graphic": "PLAYER",
+        "event" : null,
+        "lines": ["It wasn't an issue. I got to know the ship and met many people.", "I'm sure it will help me in my role as a space officer."]
+    },
+        {
+            "name": "Captain",
+            "graphic": "CAPTAIN",
+            "event" : null,
+            "lines": ["About that...", "We had some budget cuts and we'll have to let you go."]
+        },
+        {
+            "name": "Captain",
+            "graphic": "CAPTAIN",
+            "event" : "endgame",
+            "lines": ["Thank you for your service, the exit is through the airlock."]
+
+        }
+    ]
+}

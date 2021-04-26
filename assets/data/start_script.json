@@ -1,0 +1,52 @@
+{
+    "dialog": [{
+        "name":"Captain",
+        "graphic": "CAPTAIN",
+        "event" : null,
+        "lines": ["Welcome aboard the international space hub, where a bunch of people live in space.", "I am the captain of this gigantic ship, and I will be your commander from now on."]
+    }, {"name":"Player",
+        "graphic": "PLAYER",
+        "event" : null,
+        "lines": ["I was training for the past 5 years, I'm very excited to be here!"]},
+        {
+            "name": "Captain",
+            "graphic": "CAPTAIN",
+            "event" : null,
+            "lines": ["Pleasure to have you here. I'm sure you will be a great space officer."]
+        },
+        {"name":"Player",
+            "graphic": "PLAYER",
+            "event" : null,
+            "lines": ["Where can I read the safety protocols? I want to make sure I'm ready..."]},
+            {
+                "name":"Captain",
+                "graphic": "CAPTAIN",
+                "event" : null,
+                "lines": ["Don't worry, this ship is invinsible!"]
+            },
+            {
+                "name":"Captain",
+                "graphic": "CAPTAIN",
+                "event" : null,
+                "lines": ["..."]
+            },
+            {
+                "name":"Player",
+                "graphic": "PLAYER",
+                "event" : null,
+                "lines": ["..."]
+            },
+            {
+                "name":"Captain",
+                "graphic": "CAPTAIN",
+                "event" : "earthquake",
+                "lines": ["Oh...", "It seems like we have a problem.", "I'm not really feeling like handling this, go find the mechanic, unless you want thousands of innocent people to freeze in space.", "Up to you really..."]
+            },            {
+                "name":"Player",
+                "graphic": "PLAYER",
+                "event" : null,
+                "lines": ["Oh god... Let me find this guy!"]
+            }
+        
+    ]
+}
