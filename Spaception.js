@@ -4190,183 +4190,6 @@ var ItemType = $hxEnums["ItemType"] = { __ename__ : "ItemType", __constructs__ :
 	,WIG: {_hx_index:9,__enum__:"ItemType",toString:$estr}
 };
 ItemType.__empty_constructs__ = [ItemType.BANANA,ItemType.COFFEE,ItemType.BEER,ItemType.CELLPHONE,ItemType.CIGAR,ItemType.GLASSES,ItemType.PENCIL,ItemType.ROCK,ItemType.RUBIK,ItemType.WIG];
-var haxe_ds_BalancedTree = function() {
-};
-$hxClasses["haxe.ds.BalancedTree"] = haxe_ds_BalancedTree;
-haxe_ds_BalancedTree.__name__ = "haxe.ds.BalancedTree";
-haxe_ds_BalancedTree.__interfaces__ = [haxe_IMap];
-haxe_ds_BalancedTree.prototype = {
-	set: function(key,value) {
-		this.root = this.setLoop(key,value,this.root);
-	}
-	,get: function(key) {
-		var node = this.root;
-		while(node != null) {
-			var c = this.compare(key,node.key);
-			if(c == 0) {
-				return node.value;
-			}
-			if(c < 0) {
-				node = node.left;
-			} else {
-				node = node.right;
-			}
-		}
-		return null;
-	}
-	,remove: function(key) {
-		try {
-			this.root = this.removeLoop(key,this.root);
-			return true;
-		} catch( _g ) {
-			if(typeof(haxe_Exception.caught(_g).unwrap()) == "string") {
-				return false;
-			} else {
-				throw _g;
-			}
-		}
-	}
-	,keys: function() {
-		var ret = [];
-		this.keysLoop(this.root,ret);
-		return new haxe_iterators_ArrayIterator(ret);
-	}
-	,setLoop: function(k,v,node) {
-		if(node == null) {
-			return new haxe_ds_TreeNode(null,k,v,null);
-		}
-		var c = this.compare(k,node.key);
-		if(c == 0) {
-			return new haxe_ds_TreeNode(node.left,k,v,node.right,node == null ? 0 : node._height);
-		} else if(c < 0) {
-			var nl = this.setLoop(k,v,node.left);
-			return this.balance(nl,node.key,node.value,node.right);
-		} else {
-			var nr = this.setLoop(k,v,node.right);
-			return this.balance(node.left,node.key,node.value,nr);
-		}
-	}
-	,removeLoop: function(k,node) {
-		if(node == null) {
-			throw haxe_Exception.thrown("Not_found");
-		}
-		var c = this.compare(k,node.key);
-		if(c == 0) {
-			return this.merge(node.left,node.right);
-		} else if(c < 0) {
-			return this.balance(this.removeLoop(k,node.left),node.key,node.value,node.right);
-		} else {
-			return this.balance(node.left,node.key,node.value,this.removeLoop(k,node.right));
-		}
-	}
-	,keysLoop: function(node,acc) {
-		if(node != null) {
-			this.keysLoop(node.left,acc);
-			acc.push(node.key);
-			this.keysLoop(node.right,acc);
-		}
-	}
-	,merge: function(t1,t2) {
-		if(t1 == null) {
-			return t2;
-		}
-		if(t2 == null) {
-			return t1;
-		}
-		var t = this.minBinding(t2);
-		return this.balance(t1,t.key,t.value,this.removeMinBinding(t2));
-	}
-	,minBinding: function(t) {
-		if(t == null) {
-			throw haxe_Exception.thrown("Not_found");
-		} else if(t.left == null) {
-			return t;
-		} else {
-			return this.minBinding(t.left);
-		}
-	}
-	,removeMinBinding: function(t) {
-		if(t.left == null) {
-			return t.right;
-		} else {
-			return this.balance(this.removeMinBinding(t.left),t.key,t.value,t.right);
-		}
-	}
-	,balance: function(l,k,v,r) {
-		var hl = l == null ? 0 : l._height;
-		var hr = r == null ? 0 : r._height;
-		if(hl > hr + 2) {
-			var _this = l.left;
-			var _this1 = l.right;
-			if((_this == null ? 0 : _this._height) >= (_this1 == null ? 0 : _this1._height)) {
-				return new haxe_ds_TreeNode(l.left,l.key,l.value,new haxe_ds_TreeNode(l.right,k,v,r));
-			} else {
-				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l.left,l.key,l.value,l.right.left),l.right.key,l.right.value,new haxe_ds_TreeNode(l.right.right,k,v,r));
-			}
-		} else if(hr > hl + 2) {
-			var _this = r.right;
-			var _this1 = r.left;
-			if((_this == null ? 0 : _this._height) > (_this1 == null ? 0 : _this1._height)) {
-				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left),r.key,r.value,r.right);
-			} else {
-				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left.left),r.left.key,r.left.value,new haxe_ds_TreeNode(r.left.right,r.key,r.value,r.right));
-			}
-		} else {
-			return new haxe_ds_TreeNode(l,k,v,r,(hl > hr ? hl : hr) + 1);
-		}
-	}
-	,compare: function(k1,k2) {
-		return Reflect.compare(k1,k2);
-	}
-	,__class__: haxe_ds_BalancedTree
-};
-var haxe_ds_EnumValueMap = function() {
-	haxe_ds_BalancedTree.call(this);
-};
-$hxClasses["haxe.ds.EnumValueMap"] = haxe_ds_EnumValueMap;
-haxe_ds_EnumValueMap.__name__ = "haxe.ds.EnumValueMap";
-haxe_ds_EnumValueMap.__interfaces__ = [haxe_IMap];
-haxe_ds_EnumValueMap.__super__ = haxe_ds_BalancedTree;
-haxe_ds_EnumValueMap.prototype = $extend(haxe_ds_BalancedTree.prototype,{
-	compare: function(k1,k2) {
-		var d = k1._hx_index - k2._hx_index;
-		if(d != 0) {
-			return d;
-		}
-		var p1 = Type.enumParameters(k1);
-		var p2 = Type.enumParameters(k2);
-		if(p1.length == 0 && p2.length == 0) {
-			return 0;
-		}
-		return this.compareArgs(p1,p2);
-	}
-	,compareArgs: function(a1,a2) {
-		var ld = a1.length - a2.length;
-		if(ld != 0) {
-			return ld;
-		}
-		var _g = 0;
-		var _g1 = a1.length;
-		while(_g < _g1) {
-			var i = _g++;
-			var d = this.compareArg(a1[i],a2[i]);
-			if(d != 0) {
-				return d;
-			}
-		}
-		return 0;
-	}
-	,compareArg: function(v1,v2) {
-		if(Reflect.isEnumValue(v1) && Reflect.isEnumValue(v2)) {
-			return this.compare(v1,v2);
-		} else if(((v1) instanceof Array) && ((v2) instanceof Array)) {
-			return this.compareArgs(v1,v2);
-		} else {
-			return Reflect.compare(v1,v2);
-		}
-	}
-	,__class__: haxe_ds_EnumValueMap
-});
 var flixel_system_FlxVersion = function(Major,Minor,Patch) {
 	this.major = Major;
 	this.minor = Minor;
@@ -30396,6 +30219,136 @@ haxe_ds_ArraySort.swap = function(a,i,j) {
 	a[i] = a[j];
 	a[j] = tmp;
 };
+var haxe_ds_BalancedTree = function() {
+};
+$hxClasses["haxe.ds.BalancedTree"] = haxe_ds_BalancedTree;
+haxe_ds_BalancedTree.__name__ = "haxe.ds.BalancedTree";
+haxe_ds_BalancedTree.__interfaces__ = [haxe_IMap];
+haxe_ds_BalancedTree.prototype = {
+	set: function(key,value) {
+		this.root = this.setLoop(key,value,this.root);
+	}
+	,get: function(key) {
+		var node = this.root;
+		while(node != null) {
+			var c = this.compare(key,node.key);
+			if(c == 0) {
+				return node.value;
+			}
+			if(c < 0) {
+				node = node.left;
+			} else {
+				node = node.right;
+			}
+		}
+		return null;
+	}
+	,remove: function(key) {
+		try {
+			this.root = this.removeLoop(key,this.root);
+			return true;
+		} catch( _g ) {
+			if(typeof(haxe_Exception.caught(_g).unwrap()) == "string") {
+				return false;
+			} else {
+				throw _g;
+			}
+		}
+	}
+	,keys: function() {
+		var ret = [];
+		this.keysLoop(this.root,ret);
+		return new haxe_iterators_ArrayIterator(ret);
+	}
+	,setLoop: function(k,v,node) {
+		if(node == null) {
+			return new haxe_ds_TreeNode(null,k,v,null);
+		}
+		var c = this.compare(k,node.key);
+		if(c == 0) {
+			return new haxe_ds_TreeNode(node.left,k,v,node.right,node == null ? 0 : node._height);
+		} else if(c < 0) {
+			var nl = this.setLoop(k,v,node.left);
+			return this.balance(nl,node.key,node.value,node.right);
+		} else {
+			var nr = this.setLoop(k,v,node.right);
+			return this.balance(node.left,node.key,node.value,nr);
+		}
+	}
+	,removeLoop: function(k,node) {
+		if(node == null) {
+			throw haxe_Exception.thrown("Not_found");
+		}
+		var c = this.compare(k,node.key);
+		if(c == 0) {
+			return this.merge(node.left,node.right);
+		} else if(c < 0) {
+			return this.balance(this.removeLoop(k,node.left),node.key,node.value,node.right);
+		} else {
+			return this.balance(node.left,node.key,node.value,this.removeLoop(k,node.right));
+		}
+	}
+	,keysLoop: function(node,acc) {
+		if(node != null) {
+			this.keysLoop(node.left,acc);
+			acc.push(node.key);
+			this.keysLoop(node.right,acc);
+		}
+	}
+	,merge: function(t1,t2) {
+		if(t1 == null) {
+			return t2;
+		}
+		if(t2 == null) {
+			return t1;
+		}
+		var t = this.minBinding(t2);
+		return this.balance(t1,t.key,t.value,this.removeMinBinding(t2));
+	}
+	,minBinding: function(t) {
+		if(t == null) {
+			throw haxe_Exception.thrown("Not_found");
+		} else if(t.left == null) {
+			return t;
+		} else {
+			return this.minBinding(t.left);
+		}
+	}
+	,removeMinBinding: function(t) {
+		if(t.left == null) {
+			return t.right;
+		} else {
+			return this.balance(this.removeMinBinding(t.left),t.key,t.value,t.right);
+		}
+	}
+	,balance: function(l,k,v,r) {
+		var hl = l == null ? 0 : l._height;
+		var hr = r == null ? 0 : r._height;
+		if(hl > hr + 2) {
+			var _this = l.left;
+			var _this1 = l.right;
+			if((_this == null ? 0 : _this._height) >= (_this1 == null ? 0 : _this1._height)) {
+				return new haxe_ds_TreeNode(l.left,l.key,l.value,new haxe_ds_TreeNode(l.right,k,v,r));
+			} else {
+				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l.left,l.key,l.value,l.right.left),l.right.key,l.right.value,new haxe_ds_TreeNode(l.right.right,k,v,r));
+			}
+		} else if(hr > hl + 2) {
+			var _this = r.right;
+			var _this1 = r.left;
+			if((_this == null ? 0 : _this._height) > (_this1 == null ? 0 : _this1._height)) {
+				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left),r.key,r.value,r.right);
+			} else {
+				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left.left),r.left.key,r.left.value,new haxe_ds_TreeNode(r.left.right,r.key,r.value,r.right));
+			}
+		} else {
+			return new haxe_ds_TreeNode(l,k,v,r,(hl > hr ? hl : hr) + 1);
+		}
+	}
+	,compare: function(k1,k2) {
+		return Reflect.compare(k1,k2);
+	}
+	,__class__: haxe_ds_BalancedTree
+};
 var haxe_ds_TreeNode = function(l,k,v,r,h) {
 	if(h == null) {
 		h = -1;
@@ -30425,6 +30378,53 @@ haxe_ds_TreeNode.__name__ = "haxe.ds.TreeNode";
 haxe_ds_TreeNode.prototype = {
 	__class__: haxe_ds_TreeNode
 };
+var haxe_ds_EnumValueMap = function() {
+	haxe_ds_BalancedTree.call(this);
+};
+$hxClasses["haxe.ds.EnumValueMap"] = haxe_ds_EnumValueMap;
+haxe_ds_EnumValueMap.__name__ = "haxe.ds.EnumValueMap";
+haxe_ds_EnumValueMap.__interfaces__ = [haxe_IMap];
+haxe_ds_EnumValueMap.__super__ = haxe_ds_BalancedTree;
+haxe_ds_EnumValueMap.prototype = $extend(haxe_ds_BalancedTree.prototype,{
+	compare: function(k1,k2) {
+		var d = k1._hx_index - k2._hx_index;
+		if(d != 0) {
+			return d;
+		}
+		var p1 = Type.enumParameters(k1);
+		var p2 = Type.enumParameters(k2);
+		if(p1.length == 0 && p2.length == 0) {
+			return 0;
+		}
+		return this.compareArgs(p1,p2);
+	}
+	,compareArgs: function(a1,a2) {
+		var ld = a1.length - a2.length;
+		if(ld != 0) {
+			return ld;
+		}
+		var _g = 0;
+		var _g1 = a1.length;
+		while(_g < _g1) {
+			var i = _g++;
+			var d = this.compareArg(a1[i],a2[i]);
+			if(d != 0) {
+				return d;
+			}
+		}
+		return 0;
+	}
+	,compareArg: function(v1,v2) {
+		if(Reflect.isEnumValue(v1) && Reflect.isEnumValue(v2)) {
+			return this.compare(v1,v2);
+		} else if(((v1) instanceof Array) && ((v2) instanceof Array)) {
+			return this.compareArgs(v1,v2);
+		} else {
+			return Reflect.compare(v1,v2);
+		}
+	}
+	,__class__: haxe_ds_EnumValueMap
+});
 var haxe_ds__$List_ListNode = function(item,next) {
 	this.item = item;
 	this.next = next;
@@ -64958,7 +64958,7 @@ states_MenuState.prototype = $extend(flixel_FlxState.prototype,{
 	,doPreloadTasks: function() {
 		var letters = " !\"#$%&'()*+,-./" + "0123456789:;<=>?" + "@ABCDEFGHIJKLMNO" + "PQRSTUVWXYZ[]^_" + "abcdefghijklmno" + "pqrstuvwxyz{|}~\\";
 		Globals.fontXNA = flixel_graphics_frames_FlxBitmapFont.fromXNA("assets/images/fontData.png",letters);
-		Globals.nameDatabase = openfl_utils_Assets.getText("assets/data/names.txt").split("\r\n");
+		Globals.nameDatabase = openfl_utils_Assets.getText("assets/data/names.txt").split("\n");
 		Globals.promptDatabase = JSON.parse(openfl_utils_Assets.getText("assets/data/prompts.json"));
 	}
 	,__class__: states_MenuState
