@@ -14,12 +14,11 @@
             "{{parent_name}} wants me to approve you? I ain't working for free bud.",
             "You'll need you to run me some errands before you get my approval.",
             "{{parent_name}} is like family to me, I can't approve you before you",
-            "Shoosh, don't ask me to approve anything before you",
-            "{{parent_name}} is my master. Talk to my master to get my approval",
-            "Got 'em some handy-dandy yum yum quests to do before I can give in.",
-            "{{parent_name}} sent you? OK sure but I got a couple of stuff I need first, ",
-            "That bastard {{parent_name}} is annoying me again? Sheesh.... Do this first and then i'll abide...",
-            "You are my type baby. OK i'll approve but I just need these things set and i'll approve.",
+            "Sheesh, don't ask me to approve anything before you",
+            "Got some handy-dandy yum yum quests to do before I can give in.",
+            "{{parent_name}} sent you? OK sure but I got a couple of things I need first, ",
+            "That bastard {{parent_name}} is annoying me again? Sheesh... Do this first and then i'll abide...",
+            "You are my type babe. OK i'll approve but I just need these things set and i'll approve.",
              "{{parent_name}} {{parent_name}}, why do I suffer from random people talking to me... Do this, and then i'll think about it."
         ],
         "completion": [
