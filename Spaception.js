@@ -4190,6 +4190,183 @@ var ItemType = $hxEnums["ItemType"] = { __ename__ : "ItemType", __constructs__ :
 	,WIG: {_hx_index:9,__enum__:"ItemType",toString:$estr}
 };
 ItemType.__empty_constructs__ = [ItemType.BANANA,ItemType.COFFEE,ItemType.BEER,ItemType.CELLPHONE,ItemType.CIGAR,ItemType.GLASSES,ItemType.PENCIL,ItemType.ROCK,ItemType.RUBIK,ItemType.WIG];
+var haxe_ds_BalancedTree = function() {
+};
+$hxClasses["haxe.ds.BalancedTree"] = haxe_ds_BalancedTree;
+haxe_ds_BalancedTree.__name__ = "haxe.ds.BalancedTree";
+haxe_ds_BalancedTree.__interfaces__ = [haxe_IMap];
+haxe_ds_BalancedTree.prototype = {
+	set: function(key,value) {
+		this.root = this.setLoop(key,value,this.root);
+	}
+	,get: function(key) {
+		var node = this.root;
+		while(node != null) {
+			var c = this.compare(key,node.key);
+			if(c == 0) {
+				return node.value;
+			}
+			if(c < 0) {
+				node = node.left;
+			} else {
+				node = node.right;
+			}
+		}
+		return null;
+	}
+	,remove: function(key) {
+		try {
+			this.root = this.removeLoop(key,this.root);
+			return true;
+		} catch( _g ) {
+			if(typeof(haxe_Exception.caught(_g).unwrap()) == "string") {
+				return false;
+			} else {
+				throw _g;
+			}
+		}
+	}
+	,keys: function() {
+		var ret = [];
+		this.keysLoop(this.root,ret);
+		return new haxe_iterators_ArrayIterator(ret);
+	}
+	,setLoop: function(k,v,node) {
+		if(node == null) {
+			return new haxe_ds_TreeNode(null,k,v,null);
+		}
+		var c = this.compare(k,node.key);
+		if(c == 0) {
+			return new haxe_ds_TreeNode(node.left,k,v,node.right,node == null ? 0 : node._height);
+		} else if(c < 0) {
+			var nl = this.setLoop(k,v,node.left);
+			return this.balance(nl,node.key,node.value,node.right);
+		} else {
+			var nr = this.setLoop(k,v,node.right);
+			return this.balance(node.left,node.key,node.value,nr);
+		}
+	}
+	,removeLoop: function(k,node) {
+		if(node == null) {
+			throw haxe_Exception.thrown("Not_found");
+		}
+		var c = this.compare(k,node.key);
+		if(c == 0) {
+			return this.merge(node.left,node.right);
+		} else if(c < 0) {
+			return this.balance(this.removeLoop(k,node.left),node.key,node.value,node.right);
+		} else {
+			return this.balance(node.left,node.key,node.value,this.removeLoop(k,node.right));
+		}
+	}
+	,keysLoop: function(node,acc) {
+		if(node != null) {
+			this.keysLoop(node.left,acc);
+			acc.push(node.key);
+			this.keysLoop(node.right,acc);
+		}
+	}
+	,merge: function(t1,t2) {
+		if(t1 == null) {
+			return t2;
+		}
+		if(t2 == null) {
+			return t1;
+		}
+		var t = this.minBinding(t2);
+		return this.balance(t1,t.key,t.value,this.removeMinBinding(t2));
+	}
+	,minBinding: function(t) {
+		if(t == null) {
+			throw haxe_Exception.thrown("Not_found");
+		} else if(t.left == null) {
+			return t;
+		} else {
+			return this.minBinding(t.left);
+		}
+	}
+	,removeMinBinding: function(t) {
+		if(t.left == null) {
+			return t.right;
+		} else {
+			return this.balance(this.removeMinBinding(t.left),t.key,t.value,t.right);
+		}
+	}
+	,balance: function(l,k,v,r) {
+		var hl = l == null ? 0 : l._height;
+		var hr = r == null ? 0 : r._height;
+		if(hl > hr + 2) {
+			var _this = l.left;
+			var _this1 = l.right;
+			if((_this == null ? 0 : _this._height) >= (_this1 == null ? 0 : _this1._height)) {
+				return new haxe_ds_TreeNode(l.left,l.key,l.value,new haxe_ds_TreeNode(l.right,k,v,r));
+			} else {
+				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l.left,l.key,l.value,l.right.left),l.right.key,l.right.value,new haxe_ds_TreeNode(l.right.right,k,v,r));
+			}
+		} else if(hr > hl + 2) {
+			var _this = r.right;
+			var _this1 = r.left;
+			if((_this == null ? 0 : _this._height) > (_this1 == null ? 0 : _this1._height)) {
+				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left),r.key,r.value,r.right);
+			} else {
+				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left.left),r.left.key,r.left.value,new haxe_ds_TreeNode(r.left.right,r.key,r.value,r.right));
+			}
+		} else {
+			return new haxe_ds_TreeNode(l,k,v,r,(hl > hr ? hl : hr) + 1);
+		}
+	}
+	,compare: function(k1,k2) {
+		return Reflect.compare(k1,k2);
+	}
+	,__class__: haxe_ds_BalancedTree
+};
+var haxe_ds_EnumValueMap = function() {
+	haxe_ds_BalancedTree.call(this);
+};
+$hxClasses["haxe.ds.EnumValueMap"] = haxe_ds_EnumValueMap;
+haxe_ds_EnumValueMap.__name__ = "haxe.ds.EnumValueMap";
+haxe_ds_EnumValueMap.__interfaces__ = [haxe_IMap];
+haxe_ds_EnumValueMap.__super__ = haxe_ds_BalancedTree;
+haxe_ds_EnumValueMap.prototype = $extend(haxe_ds_BalancedTree.prototype,{
+	compare: function(k1,k2) {
+		var d = k1._hx_index - k2._hx_index;
+		if(d != 0) {
+			return d;
+		}
+		var p1 = Type.enumParameters(k1);
+		var p2 = Type.enumParameters(k2);
+		if(p1.length == 0 && p2.length == 0) {
+			return 0;
+		}
+		return this.compareArgs(p1,p2);
+	}
+	,compareArgs: function(a1,a2) {
+		var ld = a1.length - a2.length;
+		if(ld != 0) {
+			return ld;
+		}
+		var _g = 0;
+		var _g1 = a1.length;
+		while(_g < _g1) {
+			var i = _g++;
+			var d = this.compareArg(a1[i],a2[i]);
+			if(d != 0) {
+				return d;
+			}
+		}
+		return 0;
+	}
+	,compareArg: function(v1,v2) {
+		if(Reflect.isEnumValue(v1) && Reflect.isEnumValue(v2)) {
+			return this.compare(v1,v2);
+		} else if(((v1) instanceof Array) && ((v2) instanceof Array)) {
+			return this.compareArgs(v1,v2);
+		} else {
+			return Reflect.compare(v1,v2);
+		}
+	}
+	,__class__: haxe_ds_EnumValueMap
+});
 var flixel_system_FlxVersion = function(Major,Minor,Patch) {
 	this.major = Major;
 	this.minor = Minor;
@@ -7180,7 +7357,7 @@ ManifestResources.init = function(config) {
 	openfl_text_Font.registerFont(_$_$ASSET_$_$OPENFL_$_$flixel_$fonts_$nokiafc22_$ttf);
 	openfl_text_Font.registerFont(_$_$ASSET_$_$OPENFL_$_$flixel_$fonts_$monsterrat_$ttf);
 	var bundle;
-	var data = "{\"name\":null,\"assets\":\"aoy4:pathy25:assets%2Fdata%2Fnames.txty4:sizei3950y4:typey4:TEXTy2:idR1y7:preloadtgoR0y28:assets%2Fdata%2Fprompts.jsonR2i5811R3R4R5R7R6tgoR0y30:assets%2Fdata%2Fspaceship2.tmxR2i31892R3R4R5R8R6tgoR0y33:assets%2Fdata%2Fstart_script.jsonR2i2006R3R4R5R9R6tgoR0y31:assets%2Fdata%2Fwin_script.jsonR2i917R3R4R5R10R6tgoR0y31:assets%2Fimages%2Fdialog_bg.pngR2i547R3y5:IMAGER5R11R6tgoR0y30:assets%2Fimages%2FfontData.pngR2i2785R3R12R5R13R6tgoR0y30:assets%2Fimages%2Fhat_afro.pngR2i640R3R12R5R14R6tgoR0y30:assets%2Fimages%2Fhat_bald.pngR2i138R3R12R5R15R6tgoR0y33:assets%2Fimages%2Fhat_captain.pngR2i825R3R12R5R16R6tgoR0y33:assets%2Fimages%2Fhat_glasses.pngR2i586R3R12R5R17R6tgoR0y37:assets%2Fimages%2Fhat_glasses_red.pngR2i628R3R12R5R18R6tgoR0y35:assets%2Fimages%2Fhat_high_knot.pngR2i852R3R12R5R19R6tgoR0y41:assets%2Fimages%2Fhat_high_knot_brown.pngR2i829R3R12R5R20R6tgoR0y38:assets%2Fimages%2Fhat_space_helmet.pngR2i895R3R12R5R21R6tgoR0y34:assets%2Fimages%2Fhat_superman.pngR2i468R3R12R5R22R6tgoR0y37:assets%2Fimages%2FIndicationArrow.pngR2i220R3R12R5R23R6tgoR0y40:assets%2Fimages%2FIndicationArrowRed.pngR2i220R3R12R5R24R6tgoR0y33:assets%2Fimages%2Fitem_banana.pngR2i292R3R12R5R25R6tgoR0y31:assets%2Fimages%2Fitem_beer.pngR2i364R3R12R5R26R6tgoR0y36:assets%2Fimages%2Fitem_cellphone.pngR2i332R3R12R5R27R6tgoR0y32:assets%2Fimages%2Fitem_cigar.pngR2i291R3R12R5R28R6tgoR0y33:assets%2Fimages%2Fitem_coffee.pngR2i329R3R12R5R29R6tgoR0y34:assets%2Fimages%2Fitem_glasses.pngR2i131R3R12R5R30R6tgoR0y33:assets%2Fimages%2Fitem_pencil.pngR2i220R3R12R5R31R6tgoR0y31:assets%2Fimages%2Fitem_rock.pngR2i239R3R12R5R32R6tgoR0y32:assets%2Fimages%2Fitem_rubik.pngR2i162R3R12R5R33R6tgoR0y30:assets%2Fimages%2Fitem_wig.pngR2i193R3R12R5R34R6tgoR0y26:assets%2Fimages%2FLogo.pngR2i1499R3R12R5R35R6tgoR0y30:assets%2Fimages%2FMainMenu.pngR2i57854R3R12R5R36R6tgoR0y32:assets%2Fimages%2FPlayButton.pngR2i568R3R12R5R37R6tgoR0y28:assets%2Fimages%2FPlayer.pngR2i2268R3R12R5R38R6tgoR0y32:assets%2Fimages%2Fquest_mark.pngR2i132R3R12R5R39R6tgoR0y36:assets%2Fimages%2Fquest_mark_red.pngR2i126R3R12R5R40R6tgoR0y32:assets%2Fimages%2Fskin_black.pngR2i1399R3R12R5R41R6tgoR0y32:assets%2Fimages%2Fskin_brown.pngR2i1394R3R12R5R42R6tgoR0y30:assets%2Fimages%2Fskin_tan.pngR2i1322R3R12R5R43R6tgoR0y32:assets%2Fimages%2Fskin_white.pngR2i1365R3R12R5R44R6tgoR0y35:assets%2Fimages%2Fsuit_brucelee.pngR2i700R3R12R5R45R6tgoR0y36:assets%2Fimages%2Fsuit_crew_blue.pngR2i1204R3R12R5R46R6tgoR0y40:assets%2Fimages%2Fsuit_janitor_green.pngR2i1094R3R12R5R47R6tgoR0y32:assets%2Fimages%2Fsuit_naked.pngR2i138R3R12R5R48R6tgoR0y36:assets%2Fimages%2Fsuit_red_dress.pngR2i1424R3R12R5R49R6tgoR0y29:assets%2Fimages%2Ftileset.pngR2i7553R3R12R5R50R6tgoR0y30:assets%2Fimages%2Ftileset2.pngR2i2547R3R12R5R51R6tgoR0y36:assets%2Fmusic%2Fmusic-goes-here.txtR2zR3R4R5R52R6tgoR2i1439459R3y5:MUSICR5y43:assets%2Fmusic%2Ftirturium_background_1.oggy9:pathGroupaR54hR6tgoR2i1040542R3y5:SOUNDR5y37:assets%2Fmusic%2Ftirturium_menu_1.oggR55aR57hR6tgoR2i48400R3R56R5y31:assets%2Fsounds%2Fdonequest.oggR55aR58hR6tgoR2i93921R3R56R5y31:assets%2Fsounds%2Fexplotion.oggR55aR59hR6tgoR2i18003R3R56R5y28:assets%2Fsounds%2Fpickup.oggR55aR60hR6tgoR2i8312R3R56R5y26:assets%2Fsounds%2Ftype.oggR55aR61hR6tgoR2i20745R3R56R5y26:assets%2Fsounds%2Fwalk.oggR55aR62hR6tgoR2i2114R3R53R5y26:flixel%2Fsounds%2Fbeep.mp3R55aR63y26:flixel%2Fsounds%2Fbeep.ogghR6tgoR2i39706R3R53R5y28:flixel%2Fsounds%2Fflixel.mp3R55aR65y28:flixel%2Fsounds%2Fflixel.ogghR6tgoR2i5794R3R56R5R64R55aR63R64hgoR2i33629R3R56R5R66R55aR65R66hgoR2i15744R3y4:FONTy9:classNamey35:__ASSET__flixel_fonts_nokiafc22_ttfR5y30:flixel%2Ffonts%2Fnokiafc22.ttfR6tgoR2i29724R3R67R68y36:__ASSET__flixel_fonts_monsterrat_ttfR5y31:flixel%2Ffonts%2Fmonsterrat.ttfR6tgoR0y33:flixel%2Fimages%2Fui%2Fbutton.pngR2i519R3R12R5R73R6tgoR0y36:flixel%2Fimages%2Flogo%2Fdefault.pngR2i3280R3R12R5R74R6tgoR0y34:flixel%2Fflixel-ui%2Fimg%2Fbox.pngR2i912R3R12R5R75R6tgoR0y37:flixel%2Fflixel-ui%2Fimg%2Fbutton.pngR2i433R3R12R5R76R6tgoR0y48:flixel%2Fflixel-ui%2Fimg%2Fbutton_arrow_down.pngR2i446R3R12R5R77R6tgoR0y48:flixel%2Fflixel-ui%2Fimg%2Fbutton_arrow_left.pngR2i459R3R12R5R78R6tgoR0y49:flixel%2Fflixel-ui%2Fimg%2Fbutton_arrow_right.pngR2i511R3R12R5R79R6tgoR0y46:flixel%2Fflixel-ui%2Fimg%2Fbutton_arrow_up.pngR2i493R3R12R5R80R6tgoR0y42:flixel%2Fflixel-ui%2Fimg%2Fbutton_thin.pngR2i247R3R12R5R81R6tgoR0y44:flixel%2Fflixel-ui%2Fimg%2Fbutton_toggle.pngR2i534R3R12R5R82R6tgoR0y40:flixel%2Fflixel-ui%2Fimg%2Fcheck_box.pngR2i922R3R12R5R83R6tgoR0y41:flixel%2Fflixel-ui%2Fimg%2Fcheck_mark.pngR2i946R3R12R5R84R6tgoR0y37:flixel%2Fflixel-ui%2Fimg%2Fchrome.pngR2i253R3R12R5R85R6tgoR0y42:flixel%2Fflixel-ui%2Fimg%2Fchrome_flat.pngR2i212R3R12R5R86R6tgoR0y43:flixel%2Fflixel-ui%2Fimg%2Fchrome_inset.pngR2i192R3R12R5R87R6tgoR0y43:flixel%2Fflixel-ui%2Fimg%2Fchrome_light.pngR2i214R3R12R5R88R6tgoR0y44:flixel%2Fflixel-ui%2Fimg%2Fdropdown_mark.pngR2i156R3R12R5R89R6tgoR0y41:flixel%2Fflixel-ui%2Fimg%2Ffinger_big.pngR2i1724R3R12R5R90R6tgoR0y43:flixel%2Fflixel-ui%2Fimg%2Ffinger_small.pngR2i294R3R12R5R91R6tgoR0y38:flixel%2Fflixel-ui%2Fimg%2Fhilight.pngR2i129R3R12R5R92R6tgoR0y36:flixel%2Fflixel-ui%2Fimg%2Finvis.pngR2i128R3R12R5R93R6tgoR0y41:flixel%2Fflixel-ui%2Fimg%2Fminus_mark.pngR2i136R3R12R5R94R6tgoR0y40:flixel%2Fflixel-ui%2Fimg%2Fplus_mark.pngR2i147R3R12R5R95R6tgoR0y36:flixel%2Fflixel-ui%2Fimg%2Fradio.pngR2i191R3R12R5R96R6tgoR0y40:flixel%2Fflixel-ui%2Fimg%2Fradio_dot.pngR2i153R3R12R5R97R6tgoR0y37:flixel%2Fflixel-ui%2Fimg%2Fswatch.pngR2i185R3R12R5R98R6tgoR0y34:flixel%2Fflixel-ui%2Fimg%2Ftab.pngR2i201R3R12R5R99R6tgoR0y39:flixel%2Fflixel-ui%2Fimg%2Ftab_back.pngR2i210R3R12R5R100R6tgoR0y44:flixel%2Fflixel-ui%2Fimg%2Ftooltip_arrow.pngR2i18509R3R12R5R101R6tgoR0y39:flixel%2Fflixel-ui%2Fxml%2Fdefaults.xmlR2i1263R3R4R5R102R6tgoR0y53:flixel%2Fflixel-ui%2Fxml%2Fdefault_loading_screen.xmlR2i1953R3R4R5R103R6tgoR0y44:flixel%2Fflixel-ui%2Fxml%2Fdefault_popup.xmlR2i1848R3R4R5R104R6tgh\",\"rootPath\":null,\"version\":2,\"libraryArgs\":[],\"libraryType\":null}";
+	var data = "{\"name\":null,\"assets\":\"aoy4:pathy25:assets%2Fdata%2Fnames.txty4:sizei3950y4:typey4:TEXTy2:idR1y7:preloadtgoR0y28:assets%2Fdata%2Fprompts.jsonR2i5691R3R4R5R7R6tgoR0y30:assets%2Fdata%2Fspaceship2.tmxR2i31892R3R4R5R8R6tgoR0y33:assets%2Fdata%2Fstart_script.jsonR2i2006R3R4R5R9R6tgoR0y31:assets%2Fdata%2Fwin_script.jsonR2i917R3R4R5R10R6tgoR0y31:assets%2Fimages%2Fdialog_bg.pngR2i547R3y5:IMAGER5R11R6tgoR0y30:assets%2Fimages%2FfontData.pngR2i2785R3R12R5R13R6tgoR0y30:assets%2Fimages%2Fhat_afro.pngR2i640R3R12R5R14R6tgoR0y30:assets%2Fimages%2Fhat_bald.pngR2i138R3R12R5R15R6tgoR0y33:assets%2Fimages%2Fhat_captain.pngR2i825R3R12R5R16R6tgoR0y33:assets%2Fimages%2Fhat_glasses.pngR2i586R3R12R5R17R6tgoR0y37:assets%2Fimages%2Fhat_glasses_red.pngR2i628R3R12R5R18R6tgoR0y35:assets%2Fimages%2Fhat_high_knot.pngR2i852R3R12R5R19R6tgoR0y41:assets%2Fimages%2Fhat_high_knot_brown.pngR2i829R3R12R5R20R6tgoR0y38:assets%2Fimages%2Fhat_space_helmet.pngR2i895R3R12R5R21R6tgoR0y34:assets%2Fimages%2Fhat_superman.pngR2i468R3R12R5R22R6tgoR0y37:assets%2Fimages%2FIndicationArrow.pngR2i220R3R12R5R23R6tgoR0y40:assets%2Fimages%2FIndicationArrowRed.pngR2i220R3R12R5R24R6tgoR0y33:assets%2Fimages%2Fitem_banana.pngR2i292R3R12R5R25R6tgoR0y31:assets%2Fimages%2Fitem_beer.pngR2i364R3R12R5R26R6tgoR0y36:assets%2Fimages%2Fitem_cellphone.pngR2i332R3R12R5R27R6tgoR0y32:assets%2Fimages%2Fitem_cigar.pngR2i291R3R12R5R28R6tgoR0y33:assets%2Fimages%2Fitem_coffee.pngR2i329R3R12R5R29R6tgoR0y34:assets%2Fimages%2Fitem_glasses.pngR2i131R3R12R5R30R6tgoR0y33:assets%2Fimages%2Fitem_pencil.pngR2i220R3R12R5R31R6tgoR0y31:assets%2Fimages%2Fitem_rock.pngR2i239R3R12R5R32R6tgoR0y32:assets%2Fimages%2Fitem_rubik.pngR2i162R3R12R5R33R6tgoR0y30:assets%2Fimages%2Fitem_wig.pngR2i193R3R12R5R34R6tgoR0y26:assets%2Fimages%2FLogo.pngR2i1499R3R12R5R35R6tgoR0y30:assets%2Fimages%2FMainMenu.pngR2i57854R3R12R5R36R6tgoR0y32:assets%2Fimages%2FPlayButton.pngR2i568R3R12R5R37R6tgoR0y28:assets%2Fimages%2FPlayer.pngR2i2268R3R12R5R38R6tgoR0y32:assets%2Fimages%2Fquest_mark.pngR2i132R3R12R5R39R6tgoR0y36:assets%2Fimages%2Fquest_mark_red.pngR2i126R3R12R5R40R6tgoR0y32:assets%2Fimages%2Fskin_black.pngR2i1399R3R12R5R41R6tgoR0y32:assets%2Fimages%2Fskin_brown.pngR2i1394R3R12R5R42R6tgoR0y30:assets%2Fimages%2Fskin_tan.pngR2i1322R3R12R5R43R6tgoR0y32:assets%2Fimages%2Fskin_white.pngR2i1365R3R12R5R44R6tgoR0y35:assets%2Fimages%2Fsuit_brucelee.pngR2i700R3R12R5R45R6tgoR0y36:assets%2Fimages%2Fsuit_crew_blue.pngR2i1204R3R12R5R46R6tgoR0y40:assets%2Fimages%2Fsuit_janitor_green.pngR2i1094R3R12R5R47R6tgoR0y32:assets%2Fimages%2Fsuit_naked.pngR2i138R3R12R5R48R6tgoR0y36:assets%2Fimages%2Fsuit_red_dress.pngR2i1424R3R12R5R49R6tgoR0y29:assets%2Fimages%2Ftileset.pngR2i7553R3R12R5R50R6tgoR0y30:assets%2Fimages%2Ftileset2.pngR2i2547R3R12R5R51R6tgoR0y36:assets%2Fmusic%2Fmusic-goes-here.txtR2zR3R4R5R52R6tgoR2i1439459R3y5:MUSICR5y43:assets%2Fmusic%2Ftirturium_background_1.oggy9:pathGroupaR54hR6tgoR2i1040542R3y5:SOUNDR5y37:assets%2Fmusic%2Ftirturium_menu_1.oggR55aR57hR6tgoR2i48400R3R56R5y31:assets%2Fsounds%2Fdonequest.oggR55aR58hR6tgoR2i93921R3R56R5y31:assets%2Fsounds%2Fexplotion.oggR55aR59hR6tgoR2i18003R3R56R5y28:assets%2Fsounds%2Fpickup.oggR55aR60hR6tgoR2i8312R3R56R5y26:assets%2Fsounds%2Ftype.oggR55aR61hR6tgoR2i20745R3R56R5y26:assets%2Fsounds%2Fwalk.oggR55aR62hR6tgoR2i2114R3R53R5y26:flixel%2Fsounds%2Fbeep.mp3R55aR63y26:flixel%2Fsounds%2Fbeep.ogghR6tgoR2i39706R3R53R5y28:flixel%2Fsounds%2Fflixel.mp3R55aR65y28:flixel%2Fsounds%2Fflixel.ogghR6tgoR2i5794R3R56R5R64R55aR63R64hgoR2i33629R3R56R5R66R55aR65R66hgoR2i15744R3y4:FONTy9:classNamey35:__ASSET__flixel_fonts_nokiafc22_ttfR5y30:flixel%2Ffonts%2Fnokiafc22.ttfR6tgoR2i29724R3R67R68y36:__ASSET__flixel_fonts_monsterrat_ttfR5y31:flixel%2Ffonts%2Fmonsterrat.ttfR6tgoR0y33:flixel%2Fimages%2Fui%2Fbutton.pngR2i519R3R12R5R73R6tgoR0y36:flixel%2Fimages%2Flogo%2Fdefault.pngR2i3280R3R12R5R74R6tgoR0y34:flixel%2Fflixel-ui%2Fimg%2Fbox.pngR2i912R3R12R5R75R6tgoR0y37:flixel%2Fflixel-ui%2Fimg%2Fbutton.pngR2i433R3R12R5R76R6tgoR0y48:flixel%2Fflixel-ui%2Fimg%2Fbutton_arrow_down.pngR2i446R3R12R5R77R6tgoR0y48:flixel%2Fflixel-ui%2Fimg%2Fbutton_arrow_left.pngR2i459R3R12R5R78R6tgoR0y49:flixel%2Fflixel-ui%2Fimg%2Fbutton_arrow_right.pngR2i511R3R12R5R79R6tgoR0y46:flixel%2Fflixel-ui%2Fimg%2Fbutton_arrow_up.pngR2i493R3R12R5R80R6tgoR0y42:flixel%2Fflixel-ui%2Fimg%2Fbutton_thin.pngR2i247R3R12R5R81R6tgoR0y44:flixel%2Fflixel-ui%2Fimg%2Fbutton_toggle.pngR2i534R3R12R5R82R6tgoR0y40:flixel%2Fflixel-ui%2Fimg%2Fcheck_box.pngR2i922R3R12R5R83R6tgoR0y41:flixel%2Fflixel-ui%2Fimg%2Fcheck_mark.pngR2i946R3R12R5R84R6tgoR0y37:flixel%2Fflixel-ui%2Fimg%2Fchrome.pngR2i253R3R12R5R85R6tgoR0y42:flixel%2Fflixel-ui%2Fimg%2Fchrome_flat.pngR2i212R3R12R5R86R6tgoR0y43:flixel%2Fflixel-ui%2Fimg%2Fchrome_inset.pngR2i192R3R12R5R87R6tgoR0y43:flixel%2Fflixel-ui%2Fimg%2Fchrome_light.pngR2i214R3R12R5R88R6tgoR0y44:flixel%2Fflixel-ui%2Fimg%2Fdropdown_mark.pngR2i156R3R12R5R89R6tgoR0y41:flixel%2Fflixel-ui%2Fimg%2Ffinger_big.pngR2i1724R3R12R5R90R6tgoR0y43:flixel%2Fflixel-ui%2Fimg%2Ffinger_small.pngR2i294R3R12R5R91R6tgoR0y38:flixel%2Fflixel-ui%2Fimg%2Fhilight.pngR2i129R3R12R5R92R6tgoR0y36:flixel%2Fflixel-ui%2Fimg%2Finvis.pngR2i128R3R12R5R93R6tgoR0y41:flixel%2Fflixel-ui%2Fimg%2Fminus_mark.pngR2i136R3R12R5R94R6tgoR0y40:flixel%2Fflixel-ui%2Fimg%2Fplus_mark.pngR2i147R3R12R5R95R6tgoR0y36:flixel%2Fflixel-ui%2Fimg%2Fradio.pngR2i191R3R12R5R96R6tgoR0y40:flixel%2Fflixel-ui%2Fimg%2Fradio_dot.pngR2i153R3R12R5R97R6tgoR0y37:flixel%2Fflixel-ui%2Fimg%2Fswatch.pngR2i185R3R12R5R98R6tgoR0y34:flixel%2Fflixel-ui%2Fimg%2Ftab.pngR2i201R3R12R5R99R6tgoR0y39:flixel%2Fflixel-ui%2Fimg%2Ftab_back.pngR2i210R3R12R5R100R6tgoR0y44:flixel%2Fflixel-ui%2Fimg%2Ftooltip_arrow.pngR2i18509R3R12R5R101R6tgoR0y39:flixel%2Fflixel-ui%2Fxml%2Fdefaults.xmlR2i1263R3R4R5R102R6tgoR0y53:flixel%2Fflixel-ui%2Fxml%2Fdefault_loading_screen.xmlR2i1953R3R4R5R103R6tgoR0y44:flixel%2Fflixel-ui%2Fxml%2Fdefault_popup.xmlR2i1848R3R4R5R104R6tgh\",\"rootPath\":null,\"version\":2,\"libraryArgs\":[],\"libraryType\":null}";
 	var manifest = lime_utils_AssetManifest.parse(data,ManifestResources.rootPath);
 	var library = lime_utils_AssetLibrary.fromManifest(manifest);
 	lime_utils_Assets.registerLibrary("default",library);
@@ -30219,136 +30396,6 @@ haxe_ds_ArraySort.swap = function(a,i,j) {
 	a[i] = a[j];
 	a[j] = tmp;
 };
-var haxe_ds_BalancedTree = function() {
-};
-$hxClasses["haxe.ds.BalancedTree"] = haxe_ds_BalancedTree;
-haxe_ds_BalancedTree.__name__ = "haxe.ds.BalancedTree";
-haxe_ds_BalancedTree.__interfaces__ = [haxe_IMap];
-haxe_ds_BalancedTree.prototype = {
-	set: function(key,value) {
-		this.root = this.setLoop(key,value,this.root);
-	}
-	,get: function(key) {
-		var node = this.root;
-		while(node != null) {
-			var c = this.compare(key,node.key);
-			if(c == 0) {
-				return node.value;
-			}
-			if(c < 0) {
-				node = node.left;
-			} else {
-				node = node.right;
-			}
-		}
-		return null;
-	}
-	,remove: function(key) {
-		try {
-			this.root = this.removeLoop(key,this.root);
-			return true;
-		} catch( _g ) {
-			if(typeof(haxe_Exception.caught(_g).unwrap()) == "string") {
-				return false;
-			} else {
-				throw _g;
-			}
-		}
-	}
-	,keys: function() {
-		var ret = [];
-		this.keysLoop(this.root,ret);
-		return new haxe_iterators_ArrayIterator(ret);
-	}
-	,setLoop: function(k,v,node) {
-		if(node == null) {
-			return new haxe_ds_TreeNode(null,k,v,null);
-		}
-		var c = this.compare(k,node.key);
-		if(c == 0) {
-			return new haxe_ds_TreeNode(node.left,k,v,node.right,node == null ? 0 : node._height);
-		} else if(c < 0) {
-			var nl = this.setLoop(k,v,node.left);
-			return this.balance(nl,node.key,node.value,node.right);
-		} else {
-			var nr = this.setLoop(k,v,node.right);
-			return this.balance(node.left,node.key,node.value,nr);
-		}
-	}
-	,removeLoop: function(k,node) {
-		if(node == null) {
-			throw haxe_Exception.thrown("Not_found");
-		}
-		var c = this.compare(k,node.key);
-		if(c == 0) {
-			return this.merge(node.left,node.right);
-		} else if(c < 0) {
-			return this.balance(this.removeLoop(k,node.left),node.key,node.value,node.right);
-		} else {
-			return this.balance(node.left,node.key,node.value,this.removeLoop(k,node.right));
-		}
-	}
-	,keysLoop: function(node,acc) {
-		if(node != null) {
-			this.keysLoop(node.left,acc);
-			acc.push(node.key);
-			this.keysLoop(node.right,acc);
-		}
-	}
-	,merge: function(t1,t2) {
-		if(t1 == null) {
-			return t2;
-		}
-		if(t2 == null) {
-			return t1;
-		}
-		var t = this.minBinding(t2);
-		return this.balance(t1,t.key,t.value,this.removeMinBinding(t2));
-	}
-	,minBinding: function(t) {
-		if(t == null) {
-			throw haxe_Exception.thrown("Not_found");
-		} else if(t.left == null) {
-			return t;
-		} else {
-			return this.minBinding(t.left);
-		}
-	}
-	,removeMinBinding: function(t) {
-		if(t.left == null) {
-			return t.right;
-		} else {
-			return this.balance(this.removeMinBinding(t.left),t.key,t.value,t.right);
-		}
-	}
-	,balance: function(l,k,v,r) {
-		var hl = l == null ? 0 : l._height;
-		var hr = r == null ? 0 : r._height;
-		if(hl > hr + 2) {
-			var _this = l.left;
-			var _this1 = l.right;
-			if((_this == null ? 0 : _this._height) >= (_this1 == null ? 0 : _this1._height)) {
-				return new haxe_ds_TreeNode(l.left,l.key,l.value,new haxe_ds_TreeNode(l.right,k,v,r));
-			} else {
-				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l.left,l.key,l.value,l.right.left),l.right.key,l.right.value,new haxe_ds_TreeNode(l.right.right,k,v,r));
-			}
-		} else if(hr > hl + 2) {
-			var _this = r.right;
-			var _this1 = r.left;
-			if((_this == null ? 0 : _this._height) > (_this1 == null ? 0 : _this1._height)) {
-				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left),r.key,r.value,r.right);
-			} else {
-				return new haxe_ds_TreeNode(new haxe_ds_TreeNode(l,k,v,r.left.left),r.left.key,r.left.value,new haxe_ds_TreeNode(r.left.right,r.key,r.value,r.right));
-			}
-		} else {
-			return new haxe_ds_TreeNode(l,k,v,r,(hl > hr ? hl : hr) + 1);
-		}
-	}
-	,compare: function(k1,k2) {
-		return Reflect.compare(k1,k2);
-	}
-	,__class__: haxe_ds_BalancedTree
-};
 var haxe_ds_TreeNode = function(l,k,v,r,h) {
 	if(h == null) {
 		h = -1;
@@ -30378,53 +30425,6 @@ haxe_ds_TreeNode.__name__ = "haxe.ds.TreeNode";
 haxe_ds_TreeNode.prototype = {
 	__class__: haxe_ds_TreeNode
 };
-var haxe_ds_EnumValueMap = function() {
-	haxe_ds_BalancedTree.call(this);
-};
-$hxClasses["haxe.ds.EnumValueMap"] = haxe_ds_EnumValueMap;
-haxe_ds_EnumValueMap.__name__ = "haxe.ds.EnumValueMap";
-haxe_ds_EnumValueMap.__interfaces__ = [haxe_IMap];
-haxe_ds_EnumValueMap.__super__ = haxe_ds_BalancedTree;
-haxe_ds_EnumValueMap.prototype = $extend(haxe_ds_BalancedTree.prototype,{
-	compare: function(k1,k2) {
-		var d = k1._hx_index - k2._hx_index;
-		if(d != 0) {
-			return d;
-		}
-		var p1 = Type.enumParameters(k1);
-		var p2 = Type.enumParameters(k2);
-		if(p1.length == 0 && p2.length == 0) {
-			return 0;
-		}
-		return this.compareArgs(p1,p2);
-	}
-	,compareArgs: function(a1,a2) {
-		var ld = a1.length - a2.length;
-		if(ld != 0) {
-			return ld;
-		}
-		var _g = 0;
-		var _g1 = a1.length;
-		while(_g < _g1) {
-			var i = _g++;
-			var d = this.compareArg(a1[i],a2[i]);
-			if(d != 0) {
-				return d;
-			}
-		}
-		return 0;
-	}
-	,compareArg: function(v1,v2) {
-		if(Reflect.isEnumValue(v1) && Reflect.isEnumValue(v2)) {
-			return this.compare(v1,v2);
-		} else if(((v1) instanceof Array) && ((v2) instanceof Array)) {
-			return this.compareArgs(v1,v2);
-		} else {
-			return Reflect.compare(v1,v2);
-		}
-	}
-	,__class__: haxe_ds_EnumValueMap
-});
 var haxe_ds__$List_ListNode = function(item,next) {
 	this.item = item;
 	this.next = next;
@@ -38762,7 +38762,7 @@ var lime_utils_AssetCache = function() {
 	this.audio = new haxe_ds_StringMap();
 	this.font = new haxe_ds_StringMap();
 	this.image = new haxe_ds_StringMap();
-	this.version = 992102;
+	this.version = 229036;
 };
 $hxClasses["lime.utils.AssetCache"] = lime_utils_AssetCache;
 lime_utils_AssetCache.__name__ = "lime.utils.AssetCache";
@@ -65328,11 +65328,11 @@ GameData.ItemData = (function($this) {
 	_g.set(ItemType.BEER,{ graphic : "assets/images/item_beer.png", name : "Beer"});
 	_g.set(ItemType.CELLPHONE,{ graphic : "assets/images/item_cellphone.png", name : "Smartphone"});
 	_g.set(ItemType.CIGAR,{ graphic : "assets/images/item_cigar.png", name : "Cigar"});
-	_g.set(ItemType.GLASSES,{ graphic : "assets/images/item_glasses.png", name : "Glasses"});
+	_g.set(ItemType.GLASSES,{ graphic : "assets/images/item_glasses.png", name : "Pair of Glasses"});
 	_g.set(ItemType.PENCIL,{ graphic : "assets/images/item_pencil.png", name : "Pencil"});
-	_g.set(ItemType.ROCK,{ graphic : "assets/images/item_rock.png", name : "Pet rock"});
-	_g.set(ItemType.RUBIK,{ graphic : "assets/images/item_rubik.png", name : "Rubik's cube"});
-	_g.set(ItemType.WIG,{ graphic : "assets/images/item_wig.png", name : "Real hair"});
+	_g.set(ItemType.ROCK,{ graphic : "assets/images/item_rock.png", name : "Pet Rock"});
+	_g.set(ItemType.RUBIK,{ graphic : "assets/images/item_rubik.png", name : "Rubik's Cube"});
+	_g.set(ItemType.WIG,{ graphic : "assets/images/item_wig.png", name : "Real Hair"});
 	$r = _g;
 	return $r;
 }(this));
